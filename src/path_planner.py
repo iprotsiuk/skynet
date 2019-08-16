@@ -1,4 +1,4 @@
-from src import directions
+from src import enums
 import collections
 from typing import Dict, Tuple, List
 
@@ -11,7 +11,7 @@ class PathFinder(object):
     pass
 
   def find_path(self, black_minimap: numpy.ndarray, start_x: int, start_y: int, goal_x: int, goal_y: int) -> List[
-    directions.Direction]:
+    enums.Direction]:
     path = self._bfs(black_minimap, 1, start_x, start_y, goal_x, goal_y)
     if path is None:
       return []
@@ -48,26 +48,35 @@ class PathFinder(object):
     path.reverse()
     return path
 
-  def path_to_directions(self, path : List[Tuple]) -> List[directions.Direction]:
+  @staticmethod
+  def path_to_directions(path : List[Tuple]) -> List[enums.Direction]:
     directions_path = []
     for i in range(len(path) - 1):
       x_cur, y_cur = path[i]
       x_next, y_next = path[i+1]
       diff = (x_next - x_cur, y_next - y_cur)
       if diff == (1, 0):
-        directions_path.append(directions.Direction.RIGHT)
+        directions_path.append(enums.Direction.RIGHT)
       if diff == (0, 1):
-        directions_path.append(directions.Direction.UP)
+        directions_path.append(enums.Direction.UP)
       if diff == (-1, 0):
-        directions_path.append(directions.Direction.LEFT)
+        directions_path.append(enums.Direction.LEFT)
       if diff == (0, -1):
-        directions_path.append(directions.Direction.DOWN)
+        directions_path.append(enums.Direction.DOWN)
       if diff == (1, 1):
-        directions_path.append(directions.Direction.UP_RIGHT)
+        directions_path.append(enums.Direction.UP_RIGHT)
       if diff == (-1, 1):
-        directions_path.append(directions.Direction.UP_LEFT)
+        directions_path.append(enums.Direction.UP_LEFT)
       if diff == (1, -1):
-        directions_path.append(directions.Direction.DOWN_RIGHT)
+        directions_path.append(enums.Direction.DOWN_RIGHT)
       if diff == (-1, -1):
-        directions_path.append(directions.Direction.DOWN_LEFT)
+        directions_path.append(enums.Direction.DOWN_LEFT)
     return directions_path
+
+  @staticmethod
+  def directions_to_dirctions_with_time(directions : List[enums.Direction]) -> List[Tuple]:
+    cur_direction = None
+    cur_duration = 0
+    for d in directions:
+      if (cur_direction is None or cur_direction == d) :
+        # increment
