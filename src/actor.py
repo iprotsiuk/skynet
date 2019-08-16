@@ -14,8 +14,11 @@ class Actor(object):
     self._cur_target_y = -1
 
     # Public
+    self.black_map = None
     self.hero = hero.Character()
+    self.planned_pixel_path = []
     self.planned_directions = []
+    self.planned_directions_with_time = []
 
 
   def _update_rand_target(self, map):
@@ -23,6 +26,7 @@ class Actor(object):
 
   def update_plan(self):
     map = self._minimap_provider.get_black_minimap()
+    self.black_map = map
     self._update_rand_target(map)
 
     path = []
@@ -34,8 +38,9 @@ class Actor(object):
       if len(path) == 0:
         print("path doesn't exist to the target, reassigning target")
         self._update_rand_target(map)
-    directions = self._path_planner.path_to_directions(path)
-    self.planned_directions = directions
+    self.planned_pixel_path = path
+    self.planned_directions = self._path_planner.path_to_directions(path)
+    self.planned_directions_with_time = self._path_planner.to_directions_with_time(self.planned_directions)
 
 
     # self._debug_print_path(map, path)

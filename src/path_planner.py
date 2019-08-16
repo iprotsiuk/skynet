@@ -1,4 +1,4 @@
-from src import enums
+from src import enums, constants
 import collections
 from typing import Dict, Tuple, List
 
@@ -29,7 +29,9 @@ class PathFinder(object):
       seen.add((x, y))
       if (x, y) == (goal_x, goal_y):
         return self._build_coord_path(to_A_came_from, start_x, start_y, x, y)
-      for x2, y2 in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1), (x -1, y-1), (x -1, y+1), (x+1, y-1), (x + 1, y+1)):
+      for x2, y2 in (
+          (x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1), (x - 1, y - 1), (x - 1, y + 1), (x + 1, y - 1),
+          (x + 1, y + 1)):
         if 0 <= x2 < cols \
             and 0 <= y2 < rows \
             and grid[y2][x2] != wall_value \
@@ -49,11 +51,11 @@ class PathFinder(object):
     return path
 
   @staticmethod
-  def path_to_directions(path : List[Tuple]) -> List[enums.Direction]:
+  def path_to_directions(path: List[Tuple]) -> List[enums.Direction]:
     directions_path = []
     for i in range(len(path) - 1):
       x_cur, y_cur = path[i]
-      x_next, y_next = path[i+1]
+      x_next, y_next = path[i + 1]
       diff = (x_next - x_cur, y_next - y_cur)
       if diff == (1, 0):
         directions_path.append(enums.Direction.RIGHT)
@@ -73,10 +75,19 @@ class PathFinder(object):
         directions_path.append(enums.Direction.DOWN_LEFT)
     return directions_path
 
-  @staticmethod
-  def directions_to_dirctions_with_time(directions : List[enums.Direction]) -> List[Tuple]:
-    cur_direction = None
-    cur_duration = 0
-    for d in directions:
-      if (cur_direction is None or cur_direction == d) :
-        # increment
+  def to_directions_with_time(directions: List[enums.Direction]) -> List[Tuple]:
+    directions_with_time = []
+    if not directions:
+      return []
+
+    cur_direction = directions[0]
+    cur_time = constants.SEC_PER_PIXEL_SPEED
+
+    for i in range(2, len(directions)):
+      if directions[i] == cur_direction:
+        cur_time += constants.SEC_PER_PIXEL_SPEED
+      else:
+        directions_with_time.append((cur_direction, cur_time))
+        cur_direction = directions[i]
+        cur_time = constants.SEC_PER_PIXEL_SPEED
+    return directions_with_time

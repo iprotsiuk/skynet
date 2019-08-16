@@ -19,7 +19,8 @@ class MapProvider:
     time.sleep(2)
     windowLocation = p.locateOnScreen('data/teleport_icon.png')
     if windowLocation is None:
-      time.sleep(1)
+      print("teleport_icon wasn't found, wait a bit longer")
+      time.sleep(2)
     self._x = windowLocation.left + 280
     self._y = windowLocation.top - 416 - MINIMAP_Y_SIZE
 
