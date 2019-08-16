@@ -22,6 +22,7 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1PM93YLj6Ca3ZwnLCznb8vuKSgD" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$USER_HOME$" />
@@ -49,7 +50,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.main (1)">
+  <component name="RunManager" selected="Python.menu_navigator">
     <configuration name="actor" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SuperBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -113,7 +114,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="main_with_map" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="menu_navigator" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="SuperBot" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -121,11 +122,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main_with_map.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/menu_navigator.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -157,11 +158,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.menu_navigator" />
         <item itemvalue="Python.main (1)" />
         <item itemvalue="Python.actor" />
         <item itemvalue="Python.main_old" />
         <item itemvalue="Python.path_planner" />
-        <item itemvalue="Python.main_with_map" />
       </list>
     </recent_temporary>
   </component>
@@ -178,6 +179,7 @@
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
@@ -203,4 +205,6 @@
       </breakpoints>
     </breakpoint-manager>
   </component>
+=======
+>>>>>>> 090f4326dceeb44f0e766abe924153ccee8d2765
 </project>
