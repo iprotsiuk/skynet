@@ -75,6 +75,7 @@ class PathFinder(object):
         directions_path.append(enums.Direction.DOWN_LEFT)
     return directions_path
 
+  @staticmethod
   def to_directions_with_time(directions: List[enums.Direction]) -> List[Tuple]:
     directions_with_time = []
     if not directions:
