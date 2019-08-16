@@ -79,4 +79,4 @@ class PathFinder(object):
     cur_duration = 0
     for d in directions:
       if (cur_direction is None or cur_direction == d) :
-        # increment
+        #increment
