@@ -10,6 +10,7 @@ MINIMAP_X_SIZE = constants.MINIMAP_X_SIZE
 PLAYER_Y = constants.PLAYER_MINIMAP_Y
 PLAYER_X = constants.PLAYER_MINIMAP_X
 BLACK_THRESHOLD_VALUE = 40
+RED_THRESHOLD_VALUE = 40
 PLAYER_RADIUS = 5
 
 
@@ -39,3 +40,16 @@ class MapProvider:
     PLAYER_X - PLAYER_RADIUS:PLAYER_X + PLAYER_RADIUS].fill(0)
 
     return black_picture
+
+  # def get_red_minimap(self) -> numpy.ndarray:
+  #   # Load image and convert to RGB
+  #   img = self.get_minimap().convert("RGB")
+  #
+  #   img_data = np.asanyarray(img)
+  #
+  #   print(img_data)
+  #   # Pixels higher than this will be 1. Otherwise 0.
+  #   red_picture = (img_data > RED_THRESHOLD_VALUE)
+  #
+  #   return red_picture
+
