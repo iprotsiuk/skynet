@@ -1,6 +1,6 @@
 import pyautogui
 
-import directions
+from src import directions
 
 
 class Character(object):

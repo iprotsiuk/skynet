@@ -1,4 +1,4 @@
-import directions
+from src import directions
 import collections
 from typing import Dict, Tuple, List
 
@@ -10,7 +10,8 @@ class PathFinder(object):
     # Empty Consturctor
     pass
 
-  def find_path(self, black_minimap: numpy.ndarray, start_x: int, start_y: int, goal_x: int, goal_y: int) -> List[directions.Direction]:
+  def find_path(self, black_minimap: numpy.ndarray, start_x: int, start_y: int, goal_x: int, goal_y: int) -> List[
+    directions.Direction]:
     path = self._bfs(black_minimap, 1, start_x, start_y, goal_x, goal_y)
     if path is None:
       return []

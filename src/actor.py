@@ -1,12 +1,8 @@
 import matplotlib.pyplot as plt
-import PIL
 
 import random
-import path_planner
-import constants
 import numpy
-import minimap_provider
-import hero
+from src import hero, minimap_provider, constants, path_planner
 
 
 class Actor(object):
@@ -32,9 +28,9 @@ class Actor(object):
     path = []
     while len(path) == 0:
       path = self._path_planner.find_path(map,
-                                   constants.PLAYER_MINIMAP_X,
-                                   constants.PLAYER_MINIMAP_Y,
-                                   self._cur_target_x, self._cur_target_y)
+                                          constants.PLAYER_MINIMAP_X,
+                                          constants.PLAYER_MINIMAP_Y,
+                                          self._cur_target_x, self._cur_target_y)
       if len(path) == 0:
         print("path doesn't exist to the target, reassigning target")
         self._update_rand_target(map)

@@ -3,7 +3,7 @@ import numpy
 import numpy as np
 import PIL
 import pyautogui as p
-import constants
+from src import constants
 
 MINIMAP_Y_SIZE = constants.MINIMAP_Y_SIZE
 MINIMAP_X_SIZE = constants.MINIMAP_X_SIZE
@@ -23,7 +23,7 @@ class MapProvider:
     self._y = windowLocation.top - 416 - MINIMAP_Y_SIZE
 
   def get_minimap(self) -> PIL.Image.Image:
-    return p.screenshot('minimap.png', region=(self._x, self._y, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    return p.screenshot('data/minimap.png', region=(self._x, self._y, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
     # Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details)
 
   def get_black_minimap(self) -> numpy.ndarray:

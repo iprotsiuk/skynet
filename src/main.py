@@ -1,8 +1,5 @@
-import actor
+from src import actor
 import time
-import random
-import keyboard
-from pprint import pprint
 
 print("....")
 time.sleep(0.3)
