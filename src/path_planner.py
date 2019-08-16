@@ -22,36 +22,36 @@ class PathFinder(object):
   def _bfs(self, grid: numpy.ndarray, wall_value: int, start_col: int, start_row: int, goal_col: int, goal_row: int):
     rows, cols = grid.shape
     to_visit = collections.deque()
-    to_visit.append((start_col, start_row))
+    to_visit.append((start_row, start_col))
     seen = set()
     to_A_came_from = {}
 
     while to_visit:
-      (col, row) = to_visit.popleft()
-      seen.add((col, row))
-      if (col, row) == (goal_col, goal_row):
+      (row, col) = to_visit.popleft()
+      seen.add((row, col))
+      if (row, col) == (goal_col, goal_row):
         return self._build_coord_path(to_A_came_from=to_A_came_from, start_col=start_col, start_row=start_row,
                                       cur_col=col, cur_row=row)
-      for col_2, row_2 in (
-          (col + 1, row), (col - 1, row), (col, row + 1), (col, row - 1), (col - 1, row - 1), (col - 1, row + 1),
-          (col + 1, row - 1),
-          (col + 1, row + 1)):
+      for row_2, col_2 in (
+          (row + 1, col), (row - 1, col), (row, col + 1), (row, col - 1), (row - 1, col - 1), (row - 1, col + 1),
+          (row + 1, col - 1),
+          (row + 1, col + 1)):
         if 0 <= col_2 < cols \
             and 0 <= row_2 < rows \
             and grid[row_2][col_2] != wall_value \
-            and (col_2, row_2) not in seen:
-          to_A_came_from[(col_2, row_2)] = [col, row]
-          to_visit.append((col_2, row_2))
-          seen.add((col_2, row_2))
+            and (row_2, col_2) not in seen:
+          to_A_came_from[(row_2, col_2)] = [row, col]
+          to_visit.append((row_2, col_2))
+          seen.add((row_2, col_2))
 
   @staticmethod
   def _build_coord_path(to_A_came_from: Dict[Tuple, Tuple], start_col, start_row, cur_col, cur_row):
     path = []
-    while (cur_col, cur_row) != (start_col, start_row):
-      path.append((cur_col, cur_row))
-      (cur_col, cur_row) = to_A_came_from[cur_col, cur_row]
+    while (cur_row, cur_col) != (start_row, start_col):
+      path.append((cur_row, cur_col))
+      (cur_row, cur_col) = to_A_came_from[cur_row, cur_col]
 
-    path.append((cur_col, cur_row))
+    path.append((cur_row, cur_col))
     path.reverse()
     return path
 
@@ -59,25 +59,26 @@ class PathFinder(object):
   def path_to_directions(path: List[Tuple]) -> List[enums.Direction]:
     directions_path = []
     for i in range(len(path) - 1):
-      cur_col, cur_row = path[i]
-      next_col, next_row = path[i + 1]
-      diff = (next_col - cur_col, next_row - cur_row)
-      if diff == (1, 0):
-        directions_path.append(enums.Direction.RIGHT)
-      if diff == (0, 1):
-        directions_path.append(enums.Direction.UP)
+      cur_row, cur_col = path[i]
+      next_row, next_col = path[i + 1]
+
+      diff = (next_row - cur_row, next_col - cur_col)
       if diff == (-1, 0):
-        directions_path.append(enums.Direction.LEFT)
-      if diff == (0, -1):
-        directions_path.append(enums.Direction.DOWN)
-      if diff == (1, 1):
-        directions_path.append(enums.Direction.UP_RIGHT)
-      if diff == (-1, 1):
-        directions_path.append(enums.Direction.UP_LEFT)
-      if diff == (1, -1):
-        directions_path.append(enums.Direction.DOWN_RIGHT)
+        directions_path.append(enums.Direction.UP)
       if diff == (-1, -1):
+        directions_path.append(enums.Direction.UP_LEFT)
+      if diff == (0, -1):
+        directions_path.append(enums.Direction.LEFT)
+      if diff == (1, -1):
         directions_path.append(enums.Direction.DOWN_LEFT)
+      if diff == (1, 0):
+        directions_path.append(enums.Direction.LEFT)
+      if diff == (1, 1):
+        directions_path.append(enums.Direction.DOWN_RIGHT)
+      if diff == (0, 1):
+        directions_path.append(enums.Direction.RIGHT)
+      if diff == (-1, 1):
+        directions_path.append(enums.Direction.UP_RIGHT)
     return directions_path
 
   @staticmethod

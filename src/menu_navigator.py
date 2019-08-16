@@ -9,8 +9,8 @@ def move_to_teleport():
   pyautogui.hotkey('f')
 
 
+
 def select_level():
-  move_to_teleport()
   pyautogui.keyDown('w')
   pyautogui.keyUp('w')
   pyautogui.keyDown('w')
@@ -19,6 +19,8 @@ def select_level():
   pyautogui.keyUp('d')
   pyautogui.keyDown('enter')
   pyautogui.keyUp('enter')
+  time.sleep(2.8)
+
 
 
 def vote_reset():
@@ -28,6 +30,8 @@ def vote_reset():
   pyautogui.hotkey('enter')
   time.sleep(3.3)
 
+def reload():
+  vote_reset()
+  move_to_teleport()
+  select_level()
 
-vote_reset()
-select_level()

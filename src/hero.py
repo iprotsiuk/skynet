@@ -57,7 +57,6 @@ class Character(object):
     pyautogui.keyUp('right')
     self.current_direction = enums.Direction.HOLD
 
-
-@staticmethod
-def act():
-  pyautogui.hotkey('f')
+  @staticmethod
+  def act():
+    pyautogui.hotkey('f')
