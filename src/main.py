@@ -25,7 +25,7 @@ end_time = time.time() + constants.MAP_TIME_SEC
 while True:
   a.update_plan()
   print("taraget: ", a.target_col, a.target_row)
-  print("planned_directions = ", a.planned_directions)
+#  print("planned_directions = ", a.planned_directions)
   print("planned_directions_with_time = ", a.planned_directions_with_time)
   print("is in town = ", a.is_in_town)
   if a.is_in_map_selector:
@@ -43,7 +43,7 @@ while True:
 
   for move, time_sec in a.planned_directions_with_time:
     a.hero.move(move)
-    wait_and_click_f(time_sec, a.hero)
+    # wait_and_click_f(time_sec, a.hero)
     time.sleep(time_sec)
 
 
