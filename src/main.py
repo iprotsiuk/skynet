@@ -16,7 +16,7 @@ print (" Satrted ")
 def wait_and_click_f(timeout, hero):
   iters = round(timeout * 20)
   for i in range(iters):
-    hero.act()
+    # hero.act()
     time.sleep(0.05)
 
 menu_navigator.reload()

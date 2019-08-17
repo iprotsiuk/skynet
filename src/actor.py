@@ -2,6 +2,7 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pyautogui
 
 from src import hero, minimap_provider, constants, path_planner
 
@@ -37,7 +38,9 @@ class Actor(object):
                                           constants.PLAYER_MINIMAP_COLUMN,
                                           constants.PLAYER_MINIMAP_ROW,
                                           self.target_col, self.target_row)
-      if len(path) == 0:
+      attempts = 0
+      if len(path) == 0 and attempts < 10:
+        attempts+=1
         print("path doesn't exist to the target, reassigning target")
         self._update_rand_target(map)
     self.planned_pixel_path = path

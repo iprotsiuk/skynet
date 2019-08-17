@@ -17,6 +17,7 @@ PLAYER_RADIUS = 5
 
 
 class MapProvider:
+
   def __init__(self):
     time.sleep(2)
     windowLocation = pyautogui.locateOnScreen('data/teleport_icon.png')
@@ -26,13 +27,13 @@ class MapProvider:
     self.minimap_col = windowLocation.left + 280
     self.minimap_row = windowLocation.top - 416 - MINIMAP_Y_SIZE
     self.town_template = cv.imread('data/town.png', 0)
+    self.enemy_template = cv.imread('data/enemy.png', 0)
+    self.map_selector_template = cv.imread('data/map_selector.png', 0)
 
   def get_minimap(self) -> PIL.Image.Image:
     print("Taking a picture of minimap area ")
     return pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
     # Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details)
-
-
 
   def get_black_minimap(self) -> numpy.ndarray:
     # Load image and convert to greyscale
@@ -66,6 +67,25 @@ class MapProvider:
     img_rgb = np.array(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res = cv.matchTemplate(img_gray, self.town_template, cv.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    if len(loc[0]) == 0:
+      return False
+    return True
+
+  def locate_enemies(self) -> (list[int], list[int]):
+    img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+    res = cv.matchTemplate(img_gray, self.enemy_template, cv.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    return loc
+
+  def is_in_map_selector(self) -> bool:
+    img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    img_rgb = np.array(img_rgb)
+    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+    res = cv.matchTemplate(img_gray, self.map_selector_template, cv.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc = np.where(res >= threshold)
     if len(loc[0]) == 0:
