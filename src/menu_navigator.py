@@ -1,6 +1,8 @@
 import time
 import pyautogui
 
+def escape():
+  pyautogui.hotkey('escape')
 
 def move_to_teleport():
   pyautogui.keyDown('d')
@@ -9,19 +11,23 @@ def move_to_teleport():
   pyautogui.hotkey('f')
 
 
-
 def select_level():
-  pyautogui.keyDown('w')
-  pyautogui.keyUp('w')
-  pyautogui.keyDown('w')
-  pyautogui.keyUp('w')
+  pyautogui.keyDown('d')
+  pyautogui.keyUp('d')
+  pyautogui.keyDown('d')
+  pyautogui.keyUp('d')
+  pyautogui.keyDown('d')
+  pyautogui.keyUp('d')
+  pyautogui.keyDown('d')
+  pyautogui.keyUp('d')
   pyautogui.keyDown('d')
   pyautogui.keyUp('d')
   pyautogui.keyDown('enter')
   pyautogui.keyUp('enter')
   time.sleep(2.8)
-
-
+  pyautogui.keyDown('d')
+  time.sleep(3)
+  pyautogui.keyUp(f'd')
 
 def vote_reset():
   pyautogui.hotkey('escape')

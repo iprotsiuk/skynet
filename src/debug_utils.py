@@ -13,3 +13,7 @@ def draw_path_on_map(map, path, target_row, target_column):
 
   matplotlib.pyplot.imshow(map_tmp)
   matplotlib.pyplot.show()
+
+def draw_image(img):
+  matplotlib.pyplot.imshow(img)
+  matplotlib.pyplot.show()

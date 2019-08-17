@@ -16,7 +16,7 @@ print (" Satrted ")
 def wait_and_click_f(timeout, hero):
   iters = round(timeout * 20)
   for i in range(iters):
-    # hero.act()
+    hero.act()
     time.sleep(0.05)
 
 menu_navigator.reload()
@@ -28,6 +28,11 @@ while True:
   print("planned_directions = ", a.planned_directions)
   print("planned_directions_with_time = ", a.planned_directions_with_time)
   print("is in town = ", a.is_in_town)
+  if a.is_in_map_selector:
+    a.hero.stop()
+    menu_navigator.escape()
+    menu_navigator.reload()
+
   if a.is_in_town or time.time() > end_time:
     a.hero.stop()
     menu_navigator.reload()

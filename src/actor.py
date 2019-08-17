@@ -2,7 +2,6 @@ import random
 
 import matplotlib.pyplot as plt
 import numpy as np
-import pyautogui
 
 from src import hero, minimap_provider, constants, path_planner
 
@@ -21,16 +20,25 @@ class Actor(object):
     self.planned_directions = []
     self.planned_directions_with_time = []
     self.is_in_town = True
+    self.is_in_map_selector = True
 
-
-  def _update_rand_target(self, map):
-    self.target_row, self.target_col = self.get_random_target(map)
+  def _update_target(self, map):
+    res = self.get_enemy_target()
+    if res:
+      print("Enemy detected!")
+      self.target_row, self.target_col = res[1], res[0]
+    else:
+      self.target_row, self.target_col = self.get_random_target(map)
 
   def update_plan(self):
     map = self._minimap_provider.get_black_minimap_bold()
     self.black_map = map
-    self._update_rand_target(map)
+    self._update_target(map)
     self.is_in_town = self._minimap_provider.is_in_town()
+    self.is_in_map_selector = self._minimap_provider.is_in_map_selector()
+
+    if self.is_in_town or self.is_in_map_selector:
+      return
 
     path = []
     while len(path) == 0:
@@ -40,15 +48,14 @@ class Actor(object):
                                           self.target_col, self.target_row)
       attempts = 0
       if len(path) == 0 and attempts < 10:
-        attempts+=1
+        attempts += 1
         print("path doesn't exist to the target, reassigning target")
-        self._update_rand_target(map)
+        self._update_target(map)
     self.planned_pixel_path = path
     self.planned_directions = self._path_planner.path_to_directions(path)
     self.planned_directions_with_time = self._path_planner.to_directions_with_time(self.planned_directions)
 
-
-  def get_random_target(self, black_minimap : np.ndarray) -> (int, int):
+  def get_random_target(self, black_minimap: np.ndarray) -> (int, int):
     max_row, max_cols = black_minimap.shape
     wall = constants.MINIMAP_WALL
 
@@ -60,8 +67,14 @@ class Actor(object):
       col = random.randint(1, max_cols)
     return row, col
 
+  def get_enemy_target(self) -> (int, int):
+    rows, columns = self._minimap_provider.locate_enemies()
+    if rows.any() and columns.any():
+      return rows[0], columns[0]
+    return None
+
   def _debug_print_path(self, map, path):
-    for x, y in path :
+    for x, y in path:
       map[y][x] = 1
     plt.imshow(map)
     plt.show()

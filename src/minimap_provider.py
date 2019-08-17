@@ -6,14 +6,15 @@ import numpy
 import numpy as np
 import pyautogui
 
-from src import constants
+from src import constants, debug_utils
 
 MINIMAP_X_SIZE = constants.MINIMAP_COLUMNS
 MINIMAP_Y_SIZE = constants.MINIMAP_ROWS
-PLAYER_X = constants.PLAYER_MINIMAP_COLUMN
-PLAYER_Y = constants.PLAYER_MINIMAP_ROW
+PLAYER_COL = constants.PLAYER_MINIMAP_COLUMN
+PLAYER_ROW = constants.PLAYER_MINIMAP_ROW
 BLACK_THRESHOLD_VALUE = 40
-PLAYER_RADIUS = 5
+PLAYER_HEIGHT = 3
+PLAYER_WIDTH = 4
 
 
 class MapProvider:
@@ -32,7 +33,7 @@ class MapProvider:
 
   def get_minimap(self) -> PIL.Image.Image:
     print("Taking a picture of minimap area ")
-    return pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    return pyautogui.screenshot('out/minimap.png',region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
     # Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details)
 
   def get_black_minimap(self) -> numpy.ndarray:
@@ -44,8 +45,8 @@ class MapProvider:
     black_picture = (img_data > BLACK_THRESHOLD_VALUE)
 
     # Remove character from the map
-    black_picture[PLAYER_Y - PLAYER_RADIUS:PLAYER_Y + PLAYER_RADIUS,
-    PLAYER_X - PLAYER_RADIUS:PLAYER_X + PLAYER_RADIUS].fill(0)
+    black_picture[PLAYER_ROW - PLAYER_HEIGHT:PLAYER_ROW + PLAYER_HEIGHT,
+    PLAYER_COL - PLAYER_WIDTH:PLAYER_COL + PLAYER_WIDTH].fill(0)
 
     return black_picture
 
@@ -73,11 +74,12 @@ class MapProvider:
       return False
     return True
 
-  def locate_enemies(self) -> (list[int], list[int]):
+  def locate_enemies(self) -> (list, list):
     img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    img_rgb = np.array(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res = cv.matchTemplate(img_gray, self.enemy_template, cv.TM_CCOEFF_NORMED)
-    threshold = 0.8
+    threshold = 0.86
     loc = np.where(res >= threshold)
     return loc
 
