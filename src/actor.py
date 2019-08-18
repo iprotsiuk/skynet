@@ -21,17 +21,19 @@ class Actor(object):
     self.planned_directions_with_time = []
     self.is_in_town = True
     self.is_in_map_selector = True
+    self.iteration=0
 
   def _update_target(self, map):
-    res = self.get_enemy_target()
-    if res:
+    col_row = self.get_enemy_target()
+    if col_row and self.iteration % 5 != 0:
       print("Enemy detected!")
-      self.target_row, self.target_col = res[1], res[0]
+      self.target_row, self.target_col = col_row[1], col_row[0]
     else:
       self.target_row, self.target_col = self.get_random_target(map)
 
   def update_plan(self):
-    map = self._minimap_provider.get_black_minimap_bold()
+    self.iteration+=1
+    map = self._minimap_provider.get_black_minimap_bold(self._minimap_provider.get_black_minimap())
     self.black_map = map
     self._update_target(map)
     self.is_in_town = self._minimap_provider.is_in_town()
