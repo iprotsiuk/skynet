@@ -1,3 +1,5 @@
+import random
+
 import pyautogui
 
 from src import enums
@@ -45,12 +47,10 @@ class Character(object):
       pyautogui.keyDown('up')
       pyautogui.keyDown('left')
 
-
-  def attack(self):
-    pyautogui.hotkey('2')
-    pyautogui.hotkey('1')
-    pyautogui.hotkey('4')
-
+  def random_move(self):
+    # count of enums
+    rand_enum = random.randint(1, 8)
+    self.move(rand_enum)
 
   def stop(self):
     pyautogui.keyUp('w')
@@ -66,4 +66,3 @@ class Character(object):
   @staticmethod
   def act():
     pyautogui.hotkey('f')
-    pyautogui.hotkey('2')

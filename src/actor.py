@@ -21,21 +21,23 @@ class Actor(object):
     self.planned_directions_with_time = []
     self.is_in_town = True
     self.is_in_map_selector = True
-    self.iteration=0
+    self.iteration = 0
 
-  def _update_target(self, map):
-    col_row = self.get_enemy_target()
-    if col_row and self.iteration % 5 != 0:
-      print("Enemy detected!")
-      self.target_row, self.target_col = col_row[1], col_row[0]
+  def update_target(self, map):
+    row_and_column = self.get_enemy_target()
+    if row_and_column and self.iteration % 5 != 0:
+      self.target_row, self.target_col = row_and_column[1], row_and_column[0]
+      print("Target enemy:", self.target_row, self.target_col)
     else:
       self.target_row, self.target_col = self.get_random_target(map)
+      print("Target random:", self.target_row, self.target_col)
 
   def update_plan(self):
-    self.iteration+=1
-    map = self._minimap_provider.get_black_minimap_bold(self._minimap_provider.get_black_minimap())
+    self.iteration += 1
+    map_img = self._minimap_provider.get_minimap()
+    map = self._minimap_provider.get_black_minimap_bold(self._minimap_provider.get_black_minimap(map_img))
     self.black_map = map
-    self._update_target(map)
+    self.update_target(map)
     self.is_in_town = self._minimap_provider.is_in_town()
     self.is_in_map_selector = self._minimap_provider.is_in_map_selector()
 
@@ -52,7 +54,7 @@ class Actor(object):
       if len(path) == 0 and attempts < 10:
         attempts += 1
         print("path doesn't exist to the target, reassigning target")
-        self._update_target(map)
+        self.update_target(map)
     self.planned_pixel_path = path
     self.planned_directions = self._path_planner.path_to_directions(path)
     self.planned_directions_with_time = self._path_planner.to_directions_with_time(self.planned_directions)
