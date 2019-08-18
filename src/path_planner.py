@@ -72,7 +72,7 @@ class PathFinder(object):
       if diff == (1, -1):
         directions_path.append(enums.Direction.DOWN_LEFT)
       if diff == (1, 0):
-        directions_path.append(enums.Direction.LEFT)
+        directions_path.append(enums.Direction.DOWN)
       if diff == (1, 1):
         directions_path.append(enums.Direction.DOWN_RIGHT)
       if diff == (0, 1):

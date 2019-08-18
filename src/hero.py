@@ -1,3 +1,5 @@
+import random
+
 import pyautogui
 
 from src import enums
@@ -45,6 +47,10 @@ class Character(object):
       pyautogui.keyDown('up')
       pyautogui.keyDown('left')
 
+  def random_move(self):
+    # count of enums
+    rand_enum = random.randint(1, 8)
+    self.move(rand_enum)
 
   def stop(self):
     pyautogui.keyUp('w')
