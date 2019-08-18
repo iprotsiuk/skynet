@@ -46,6 +46,12 @@ class Character(object):
       pyautogui.keyDown('left')
 
 
+  def attack(self):
+    pyautogui.hotkey('2')
+    pyautogui.hotkey('1')
+    pyautogui.hotkey('4')
+
+
   def stop(self):
     pyautogui.keyUp('w')
     pyautogui.keyUp('a')
@@ -60,3 +66,4 @@ class Character(object):
   @staticmethod
   def act():
     pyautogui.hotkey('f')
+    pyautogui.hotkey('2')

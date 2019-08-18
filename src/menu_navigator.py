@@ -27,7 +27,8 @@ def select_level():
   time.sleep(2.8)
   pyautogui.keyDown('d')
   time.sleep(3)
-  pyautogui.keyUp(f'd')
+  pyautogui.keyUp('d')
+  pyautogui.hotkey('x')
 
 def vote_reset():
   pyautogui.hotkey('escape')

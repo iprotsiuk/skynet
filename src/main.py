@@ -39,11 +39,13 @@ while True:
     end_time = time.time() + constants.MAP_TIME_SEC
 
 
-  # debug_utils.draw_path_on_map(a.black_map, a.planned_pixel_path, target_row=a.target_row, target_column=a.target_col)
+  debug_utils.draw_path_on_map(a.black_map, a.planned_pixel_path, target_row=a.target_row, target_column=a.target_col)
 
   for move, time_sec in a.planned_directions_with_time:
     a.hero.move(move)
     # wait_and_click_f(time_sec, a.hero)
+    a.hero.attack()
+    a.hero.act()
     time.sleep(time_sec)
 
 
