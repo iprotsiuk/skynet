@@ -15,19 +15,20 @@ def move_to_teleport():
 
 
 def select_level():
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
+  pyautogui.keyDown('a')
+  pyautogui.keyUp('af')
+  # pyautogui.keyDown('d')
+  # pyautogui.keyUp('d')
+  # pyautogui.keyDown('d')
+  # pyautogui.keyUp('d')
+  # pyautogui.keyDown('d')
+  # pyautogui.keyUp('d')
+  # pyautogui.keyDown('d')
+  # pyautogui.keyUp('d')
   pyautogui.keyDown('enter')
   pyautogui.keyUp('enter')
   time.sleep(2.1)
+  pyautogui.hotkey('x')
 
 
 def vote_reset():
