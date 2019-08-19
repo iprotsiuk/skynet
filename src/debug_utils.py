@@ -1,10 +1,10 @@
 import matplotlib.pyplot
 import numpy as np
 
-from src import constants
+from src.constants import Constants
 
-PLAYER_COL = constants.PLAYER_MINIMAP_COLUMN
-PLAYER_ROW = constants.PLAYER_MINIMAP_ROW
+PLAYER_COL = Constants.PLAYER_MINIMAP_COLUMN
+PLAYER_ROW = Constants.PLAYER_MINIMAP_ROW
 
 
 def draw_path_on_map(map, path, target_row, target_column):
@@ -17,8 +17,8 @@ def draw_path_on_map(map, path, target_row, target_column):
   # target_column - 5:target_column + 5].fill(30)
 
   # Mark Player
-  map_tmp[constants.PLAYER_MINIMAP_ROW - 3:constants.PLAYER_MINIMAP_ROW + 3,
-  constants.PLAYER_MINIMAP_COLUMN - 3:constants.PLAYER_MINIMAP_COLUMN + 3].fill(30)
+  map_tmp[Constants.PLAYER_MINIMAP_ROW - 3:Constants.PLAYER_MINIMAP_ROW + 3,
+  Constants.PLAYER_MINIMAP_COLUMN - 3:Constants.PLAYER_MINIMAP_COLUMN + 3].fill(30)
 
   matplotlib.pyplot.imshow(map_tmp)
   matplotlib.pyplot.show()
