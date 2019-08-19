@@ -37,6 +37,7 @@ def select_level():
   pyautogui.keyUp('d')
   pyautogui.keyDown('d')
   pyautogui.keyUp('d')
+
   pyautogui.keyDown('enter')
   pyautogui.keyUp('enter')
   time.sleep(2.1)

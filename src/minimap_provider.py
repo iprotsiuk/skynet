@@ -24,12 +24,14 @@ class MapProvider(object):
       print("teleport_icon wasn't found, wait a bit longer")
       time.sleep(2)
       windowLocation = pyautogui.locateOnScreen('data/teleport_icon.png')
+
     if windowLocation is not None:
       self.minimap_col = windowLocation.left + 280 - 2
       self.minimap_row = windowLocation.top - 416 - MINIMAP_Y_SIZE - 3
     else:
       print("teleport_icon wasn't found, abort now!")
-    self.town_template = cv.imread('data/town.png', 0)
+    self.first_town_template = cv.imread('data/town.png', 0)
+    self.last_town_template = cv.imread('data/last_town.png', 0)
     self.enemy_template = cv.imread('data/red_enemy.png', 0)
     self.player_template = cv.imread('data/player.png', 0)
     self.map_selector_template = cv.imread('data/map_selector.png', 0)
@@ -92,12 +94,14 @@ class MapProvider(object):
     #print('taking screenshot is_in_town, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    res = cv.matchTemplate(img_gray, self.town_template, cv.TM_CCOEFF_NORMED)
+    res_first_town = cv.matchTemplate(img_gray, self.first_town_template, cv.TM_CCOEFF_NORMED)
+    res_last_town = cv.matchTemplate(img_gray, self.last_town_template, cv.TM_CCOEFF_NORMED)
     threshold = 0.8
-    loc = np.where(res >= threshold)
-    if len(loc[0]) == 0:
-      return False
-    return True
+    loc_first_town = np.where(res_first_town >= threshold)
+    loc_last_town = np.where(res_last_town >= threshold)
+    if len(loc_last_town[0]) != 0 or len(loc_first_town[0] != 0):
+      return True
+    return False
 
   def locate_player(self, img_rgb) -> (list, list):
     img_rgb = np.array(img_rgb)

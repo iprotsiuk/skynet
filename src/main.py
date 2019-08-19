@@ -36,6 +36,8 @@ def wait_and_click_f(timeout, hero):
   while time.time() < time_end_move:
     hero.act()
     pyautogui.hotkey('4')
+    pyautogui.hotkey('1')
+    pyautogui.hotkey('2')
 
 # Start and go right'
 menu_navigator.reload()
@@ -77,7 +79,7 @@ while True:
     a.hero.move(move)
     wait_and_click_f(time_sec, a.hero)
     # time.sleep(time_sec)
-  a.hero.stop()
+    a.hero.stop()
 
 
 
