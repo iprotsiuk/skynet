@@ -1,8 +1,11 @@
-import time
-
 import pyautogui
 
-from src import actor, menu_navigator, constants
+from src import actor, menu_navigator, constants, debug_utils, minimap_provider
+import time
+from src.constants import Constants
+import cv2
+
+from src.debug_utils import draw_path_on_map, draw_image
 
 print("....")
 time.sleep(0.3)
@@ -12,7 +15,8 @@ print("..")
 time.sleep(0.3)
 print(".")
 time.sleep(0.3)
-print(" Satrted ")
+print (" Satrted ")
+
 
 
 # def draw_path_on_map_from_img(imp_path):
@@ -28,11 +32,10 @@ print(" Satrted ")
 
 
 def wait_and_click_f(timeout, hero):
-  time_end_move = time.time() + timeout
+  time_end_move = time.time()+timeout
   while time.time() < time_end_move:
     hero.act()
     pyautogui.hotkey('4')
-
 
 # Start and go right'
 menu_navigator.reload()
@@ -41,14 +44,13 @@ a = actor.Actor()
 time.sleep(2.1)
 pyautogui.keyUp('d')
 
-end_time = time.time() + constants.MAP_TIME_SEC
+end_time = time.time() + Constants.MAP_TIME_SEC
 while True:
   print("\nStart of iteration", a.iteration)
   a.update_plan()
   # print("planned_pixel_path = ", a.planned_pixel_path)
   # print("planned_directions = ", a.planned_directions)
   print("planned_directions_with_time = ", a.planned_directions_with_time)
-  1
   print("is in town = ", a.is_in_town)
   if a.is_in_map_selector:
     a.hero.stop()
@@ -58,7 +60,7 @@ while True:
   if a.is_in_town or time.time() > end_time:
     a.hero.stop()
     menu_navigator.reload()
-    end_time = time.time() + constants.MAP_TIME_SEC
+    end_time = time.time() + Constants.MAP_TIME_SEC
 
   if not a.planned_directions_with_time:
     a.hero.random_move()
@@ -76,3 +78,7 @@ while True:
     wait_and_click_f(time_sec, a.hero)
     # time.sleep(time_sec)
   a.hero.stop()
+
+
+
+

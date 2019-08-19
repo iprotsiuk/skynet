@@ -3,7 +3,8 @@ from typing import Dict, Tuple, List
 
 import numpy
 
-from src import enums, constants
+from src import enums
+from src.constants import Constants
 
 
 class PathFinder(object):
@@ -88,13 +89,13 @@ class PathFinder(object):
       return []
 
     cur_direction = directions[0]
-    cur_time = constants.SEC_PER_PIXEL_SPEED
+    cur_time = Constants.SEC_PER_PIXEL_SPEED
 
     for i in range(2, len(directions)):
       if directions[i] == cur_direction:
-        cur_time += constants.SEC_PER_PIXEL_SPEED
+        cur_time += Constants.SEC_PER_PIXEL_SPEED
       else:
         directions_with_time.append((cur_direction, cur_time))
         cur_direction = directions[i]
-        cur_time = constants.SEC_PER_PIXEL_SPEED
+        cur_time = Constants.SEC_PER_PIXEL_SPEED
     return directions_with_time

@@ -13,8 +13,20 @@ def move_to_teleport():
   pyautogui.keyUp('d')
   pyautogui.hotkey('f')
 
+def keyDownUp(str):
+  pyautogui.keyDown(str)
+  pyautogui.keyUp(str)
+
 
 def select_level():
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('a')
+  # keyDownUp('enter')
   pyautogui.keyDown('d')
   pyautogui.keyUp('d')
   pyautogui.keyDown('d')
