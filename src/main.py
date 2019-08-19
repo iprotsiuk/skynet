@@ -1,11 +1,9 @@
+import time
+
 import pyautogui
 
-from src import actor, menu_navigator, constants, debug_utils, minimap_provider
-import time
+from src import actor, menu_navigator
 from src.constants import Constants
-import cv2
-
-from src.debug_utils import draw_path_on_map, draw_image
 
 print("....")
 time.sleep(0.3)
@@ -15,8 +13,7 @@ print("..")
 time.sleep(0.3)
 print(".")
 time.sleep(0.3)
-print (" Satrted ")
-
+print(" Satrted ")
 
 
 # def draw_path_on_map_from_img(imp_path):
@@ -32,15 +29,16 @@ print (" Satrted ")
 
 
 def wait_and_click_f(timeout, hero):
-  time_end_move = time.time()+timeout
+  time_end_move = time.time() + timeout
   while time.time() < time_end_move:
     hero.act()
     pyautogui.hotkey('4')
     pyautogui.hotkey('1')
     pyautogui.hotkey('2')
 
+
 # Start and go right'
-menu_navigator.reload()
+menu_navigator.reload_last_level()
 pyautogui.keyDown('d')
 a = actor.Actor()
 time.sleep(2.1)
@@ -57,14 +55,15 @@ while True:
   if a.is_in_map_selector:
     a.hero.stop()
     menu_navigator.escape()
-    menu_navigator.reload()
+    menu_navigator.reload_last_level()
 
   if a.is_in_town or time.time() > end_time:
     a.hero.stop()
-    menu_navigator.reload()
+    menu_navigator.reload_last_level()
     end_time = time.time() + Constants.MAP_TIME_SEC
 
   if not a.planned_directions_with_time:
+    print("No directions, making random move")
     a.hero.random_move()
     continue
   # debug_utils.draw_path_on_map(a.black_map, a.planned_pixel_path, target_row=a.target_row, target_column=a.target_col)
@@ -80,7 +79,3 @@ while True:
     wait_and_click_f(time_sec, a.hero)
     # time.sleep(time_sec)
     a.hero.stop()
-
-
-
-

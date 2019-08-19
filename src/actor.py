@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src import hero, minimap_provider, constants, path_planner
+from src import hero, minimap_provider, path_planner
 from src.constants import Constants
 
 
@@ -46,24 +46,16 @@ class Actor(object):
       return
 
     path = []
-
-
-
-    while len(path) == 0:
-      player_row, player_column = self._minimap_provider.locate_player(self._minimap_provider.get_minimap())
-      # print('PLAYER COORDS FOUND: ',player_row, player_column)
+    path_attempts = 0
+    while len(path) == 0 and path_attempts < 10:
+      player_row, player_column = self._minimap_provider.locate_player(map_img)
       path = self._path_planner.find_path(map,
                                           player_column,
                                           player_row,
                                           self.target_col, self.target_row)
 
-            # path = self._path_planner.find_path(map,
-            #                               constants.PLAYER_MINIMAP_COLUMN,
-            #                               constants.PLAYER_MINIMAP_ROW,
-            #                               self.target_col, self.target_row)
-      attempts = 0
-      if len(path) == 0 and attempts < 10:
-        attempts += 1
+      if len(path) == 0 and path_attempts < 10:
+        path_attempts += 1
         print("path doesn't exist to the target, reassigning target")
         self.update_target(map)
     self.planned_pixel_path = path

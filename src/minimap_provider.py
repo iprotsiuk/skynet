@@ -6,15 +6,12 @@ import numpy
 import numpy as np
 import pyautogui
 
-
-from src import constants
 from src.constants import Constants
 
 # import draw_image
 
 MINIMAP_X_SIZE = Constants.MINIMAP_COLUMNS
 MINIMAP_Y_SIZE = Constants.MINIMAP_ROWS
-
 
 
 class MapProvider(object):
@@ -91,7 +88,7 @@ class MapProvider(object):
   def is_in_town(self) -> bool:
     ts = time.time()
     img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row - 51, MINIMAP_X_SIZE, 51))
-    #print('taking screenshot is_in_town, time_sec=', round(time.time() - ts, 4))
+    # print('taking screenshot is_in_town, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res_first_town = cv.matchTemplate(img_gray, self.first_town_template, cv.TM_CCOEFF_NORMED)
@@ -156,7 +153,7 @@ class MapProvider(object):
   def is_in_map_selector(self) -> bool:
     ts = time.time()
     img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
-    #print4('taking screenshot is_in_map_selector, time_sec=', round(time.time() - ts, 4))
+    # print4('taking screenshot is_in_map_selector, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res = cv.matchTemplate(img_gray, self.map_selector_template, cv.TM_CCOEFF_NORMED)

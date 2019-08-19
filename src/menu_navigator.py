@@ -13,34 +13,30 @@ def move_to_teleport():
   pyautogui.keyUp('d')
   pyautogui.hotkey('f')
 
+
 def keyDownUp(str):
   pyautogui.keyDown(str)
   pyautogui.keyUp(str)
 
 
 def select_level():
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('a')
-  # keyDownUp('enter')
+  keyDownUp('d')
+  keyDownUp('d')
+  keyDownUp('d')
+  keyDownUp('d')
+  keyDownUp('d')
+  keyDownUp('enter')
   pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
-  pyautogui.keyUp('d')
-  pyautogui.keyDown('d')
+  time.sleep(2.1)
   pyautogui.keyUp('d')
 
-  pyautogui.keyDown('enter')
-  pyautogui.keyUp('enter')
+def select_last_level():
+  keyDownUp('a')
+  keyDownUp('enter')
+  pyautogui.keyDown('d')
   time.sleep(2.1)
+  pyautogui.keyUp('d')
+
 
 
 def vote_reset():
@@ -55,3 +51,8 @@ def reload():
   vote_reset()
   move_to_teleport()
   select_level()
+
+def reload_last_level():
+  vote_reset()
+  move_to_teleport()
+  select_last_level()
