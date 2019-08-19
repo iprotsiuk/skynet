@@ -1,7 +1,7 @@
 import time
 
 import PIL
-import cv2 as cv
+import cv2
 import numpy
 import numpy as np
 import pyautogui
@@ -26,10 +26,10 @@ class MapProvider:
       windowLocation = pyautogui.locateOnScreen('data/teleport_icon.png')
     self.minimap_col = windowLocation.left + 280
     self.minimap_row = windowLocation.top - 416 - MINIMAP_Y_SIZE
-    self.first_town_template = cv.imread('data/town.png', 0)
-    self.last_town_template = cv.imread('data/last_town.png', 0)
-    self.enemy_template = cv.imread('data/red_enemy.png', 0)
-    self.map_selector_template = cv.imread('data/map_selector.png', 0)
+    self.first_town_template = cv2.imread('data/town.png', 0)
+    self.last_town_template = cv2.imread('data/last_town.png', 0)
+    self.enemy_template = cv2.imread('data/red_enemy.png', 0)
+    self.map_selector_template = cv2.imread('data/map_selector.png', 0)
 
   def get_minimap(self) -> PIL.Image.Image:
     # Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details)
@@ -43,7 +43,7 @@ class MapProvider:
     # Load image and convert to greyscale
     img = np.asarray(img)
     img = MapProvider.remove_creatures_from_map(img)
-    img_gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # debug_utils.draw_image(img_gray)
 
     # Pixels higher than this will be 1. Otherwise 0.
@@ -78,9 +78,9 @@ class MapProvider:
     img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row - 51, MINIMAP_X_SIZE, 51))
     print('taking screenshot is_in_town, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
-    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    res_first_town = cv.matchTemplate(img_gray, self.first_town_template, cv.TM_CCOEFF_NORMED)
-    res_last_town = cv.matchTemplate(img_gray, self.last_town_template, cv.TM_CCOEFF_NORMED)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    res_first_town = cv2.matchTemplate(img_gray, self.first_town_template, cv2.TM_CCOEFF_NORMED)
+    res_last_town = cv2.matchTemplate(img_gray, self.last_town_template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc_first_town = np.where(res_first_town >= threshold)
     loc_last_town = np.where(res_last_town >= threshold)
@@ -92,8 +92,8 @@ class MapProvider:
     img_rgb = self.get_minimap()
     img_rgb = np.array(img_rgb)
     img_rgb = self.map_to_red(img_rgb)
-    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    res = cv.matchTemplate(img_gray, self.enemy_template, cv.TM_CCOEFF_NORMED)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    res = cv2.matchTemplate(img_gray, self.enemy_template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.6
     loc = np.where(res >= threshold)
     return loc
@@ -101,7 +101,7 @@ class MapProvider:
   @staticmethod
   def map_to_red(map: np.array):
 
-    hsv = cv.cvtColor(map, cv.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(map, cv2.COLOR_BGR2HSV)
 
     lower_red = np.array([0, 220, 100])
     upper_red = np.array([255, 230, 255])
@@ -109,14 +109,14 @@ class MapProvider:
     # lower_red = np.array([0,50,180])
     # upper_red = np.array([255,255,255])
 
-    mask = cv.inRange(hsv, lower_red, upper_red)
-    res = cv.bitwise_and(map, map, mask=mask)
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    res = cv2.bitwise_and(map, map, mask=mask)
 
-    # cv.imshow('hsv',hsv)
-    # cv.imshow('img_rgb',map)
-    # cv.imshow('mask',mask)
-    # cv.imshow('res',res)
-    # cv.waitKey(0)
+    # cv2.imshow('hsv',hsv)
+    # cv2.imshow('img_rgb',map)
+    # cv2.imshow('mask',mask)
+    # cv2.imshow('res',res)
+    # cv2.waitKey(0)
     return res
 
   def is_in_map_selector(self) -> bool:
@@ -124,8 +124,8 @@ class MapProvider:
     img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
     print('taking screenshot is_in_map_selector, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
-    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
-    res = cv.matchTemplate(img_gray, self.map_selector_template, cv.TM_CCOEFF_NORMED)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
+    res = cv2.matchTemplate(img_gray, self.map_selector_template, cv2.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc = np.where(res >= threshold)
     if len(loc[0]) == 0:
@@ -135,7 +135,7 @@ class MapProvider:
   @staticmethod
   def remove_creatures_from_map(map: np.array):
     map = MapProvider.remove_player_from_map(map)
-    hsv = cv.cvtColor(map, cv.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(map, cv2.COLOR_BGR2HSV)
 
     lower_red = np.array([0, 0, 0])
     upper_red = np.array([80, 220, 220])
@@ -143,17 +143,17 @@ class MapProvider:
     # lower_red = np.array([0,0,0])
     # upper_red = np.array([80,220,220])
 
-    mask = cv.inRange(hsv, lower_red, upper_red)
-    res = cv.bitwise_and(map, map, mask=mask)
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    res = cv2.bitwise_and(map, map, mask=mask)
     return res
 
   @staticmethod
   def remove_player_from_map(map: np.array):
-    hsv = cv.cvtColor(map, cv.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(map, cv2.COLOR_BGR2HSV)
 
     lower_red = np.array([0, 135, 0])
     upper_red = np.array([255, 255, 255])
 
-    mask = cv.inRange(hsv, lower_red, upper_red)
-    res = cv.bitwise_and(map, map, mask=mask)
+    mask = cv2.inRange(hsv, lower_red, upper_red)
+    res = cv2.bitwise_and(map, map, mask=mask)
     return res
