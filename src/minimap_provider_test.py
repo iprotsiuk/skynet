@@ -1,6 +1,7 @@
 import unittest
 
 import cv2
+import numpy as np
 
 from src.minimap_provider import MapProvider
 
@@ -12,6 +13,8 @@ class FakeMapProvider(MapProvider):
 class TestMapProvider(unittest.TestCase):
   m = MapProvider()
 
+  m.update_maps()
+
   def test_path_to_directions_going_down(self):
     img_rgb1 = cv2.imread('test_data/map_trying_go_171_103.png')
     img_rgb2 = cv2.imread('test_data/map_wrong_path.png')
@@ -19,12 +22,12 @@ class TestMapProvider(unittest.TestCase):
     img_rgb4 = cv2.imread('test_data/map_wrong_path3.png')
     img_rgb5 = cv2.imread('test_data/example_map2.png')
     img_rgb6 = cv2.imread('test_data/example_map1.png')
-    print(self.m.locate_player(img_rgb1))
-    print(self.m.locate_player(img_rgb2))
-    print(self.m.locate_player(img_rgb3))
-    print(self.m.locate_player(img_rgb4))
-    print(self.m.locate_player(img_rgb5))
-    print(self.m.locate_player(img_rgb6))
+    print(self.m.locate_player(np.array(img_rgb1)))
+    print(self.m.locate_player(np.array(img_rgb2)))
+    print(self.m.locate_player(np.array(img_rgb3)))
+    print(self.m.locate_player(np.array(img_rgb4)))
+    print(self.m.locate_player(np.array(img_rgb5)))
+    print(self.m.locate_player(np.array(img_rgb6)))
 
 
 # create FakeProvider calss

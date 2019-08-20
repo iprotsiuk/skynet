@@ -30,13 +30,13 @@ def select_level():
   time.sleep(2.1)
   pyautogui.keyUp('d')
 
+
 def select_last_level():
   keyDownUp('a')
   keyDownUp('enter')
   pyautogui.keyDown('d')
   time.sleep(2.1)
   pyautogui.keyUp('d')
-
 
 
 def vote_reset():
@@ -51,6 +51,7 @@ def reload():
   vote_reset()
   move_to_teleport()
   select_level()
+
 
 def reload_last_level():
   vote_reset()

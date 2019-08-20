@@ -5,6 +5,7 @@ import numpy as np
 
 from src import hero, minimap_provider, path_planner
 from src.constants import Constants
+from src.minimap_provider import MapProvider
 
 
 class Actor(object):
@@ -35,8 +36,9 @@ class Actor(object):
 
   def update_plan(self):
     self.iteration += 1
-    map_img = self._minimap_provider.get_minimap()
-    map = self._minimap_provider.get_black_minimap_bold(self._minimap_provider.get_black_minimap(map_img))
+    self._minimap_provider.update_maps()
+    map_np_array = self._minimap_provider.minimap_np_array
+    map = self._minimap_provider.get_black_minimap_bold(self._minimap_provider.get_black_minimap(map_np_array))
     self.black_map = map
     self.update_target(map)
     self.is_in_town = self._minimap_provider.is_in_town()
@@ -48,7 +50,7 @@ class Actor(object):
     path = []
     path_attempts = 0
     while len(path) == 0 and path_attempts < 10:
-      player_row, player_column = self._minimap_provider.locate_player(map_img)
+      player_row, player_column = self._minimap_provider.locate_player(map_np_array)
       path = self._path_planner.find_path(map,
                                           player_column,
                                           player_row,

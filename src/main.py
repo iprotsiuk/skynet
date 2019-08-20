@@ -40,6 +40,7 @@ def wait_and_click_f(timeout, hero):
 # Start and go right'
 menu_navigator.reload_last_level()
 pyautogui.keyDown('d')
+pyautogui.hotkey('x')
 a = actor.Actor()
 time.sleep(2.1)
 pyautogui.keyUp('d')

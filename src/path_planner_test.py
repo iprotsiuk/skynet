@@ -1,6 +1,7 @@
 import unittest
 
 from src.enums import Direction
+from src.minimap_provider import MapProvider
 from src.path_planner import PathFinder
 
 
@@ -18,3 +19,6 @@ class TestPathPlanner(unittest.TestCase):
 
 if __name__ == '__main__':
   unittest.main()
+
+m = MapProvider()
+m.update_maps()

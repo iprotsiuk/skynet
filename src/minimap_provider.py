@@ -1,7 +1,8 @@
 import time
 
 import PIL
-import cv2
+from PIL import ImageGrab
+import cv2 as cv
 import numpy
 import numpy as np
 import pyautogui
@@ -12,54 +13,49 @@ from src.constants import Constants
 
 MINIMAP_X_SIZE = Constants.MINIMAP_COLUMNS
 MINIMAP_Y_SIZE = Constants.MINIMAP_ROWS
+WINDOW_COLUMNS_SIZE = Constants.WINDOW_COLUMNS
+WINDOW_ROWS_SIZE = Constants.WINDOW_ROWS
+MINIMAP_COLS_LOCATION = Constants.MIMIMAP_LOCATION_COLS
+MINIMAP_ROWS_LOCATION = Constants.MIMIMAP_LOCATION_ROWS
 
 
 class MapProvider(object):
   def __init__(self):
-    windowLocation = pyautogui.locateOnScreen('data/teleport_icon.png')
-    if windowLocation is None:
+    teleport_location = pyautogui.locateOnScreen('data/teleport_icon.png')
+    if teleport_location is None:
       print("teleport_icon wasn't found, wait a bit longer")
       time.sleep(2)
-      windowLocation = pyautogui.locateOnScreen('data/teleport_icon.png')
+      teleport_location = pyautogui.locateOnScreen('data/teleport_icon.png')
 
-
-    if windowLocation is not None:
-      self.minimap_col = windowLocation.left + 280 - 2
-      self.minimap_row = windowLocation.top - 416 - MINIMAP_Y_SIZE - 3
+    if teleport_location is not None:
+      self.window_location_col = teleport_location.left - 766
+      self.window_location_row = teleport_location.top - 660
     else:
       print("teleport_icon wasn't found, abort now!")
+
     self.first_town_template = cv.imread('data/town.png', 0)
     self.last_town_template = cv.imread('data/last_town.png', 0)
     self.enemy_template = cv.imread('data/red_enemy.png', 0)
     self.player_template = cv.imread('data/player.png', 0)
     self.map_selector_template = cv.imread('data/map_selector.png', 0)
+    #########################
+    self.game_window_image = PIL.Image.Image()
+    self.minimap_image = PIL.Image.Image()
+    self.is_in_town_image = PIL.Image.Image()
+    self.is_in_map_selector_image = PIL.Image.Image()
+    #########################
 
   def get_minimap(self) -> PIL.Image.Image:
-    # Calling screenshot() will return an Image object (see the Pillow or PIL module documentation for details)
-    ts = time.time()
-    img = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
-    print('taking screenshot get_minimap, time_sec=', round(time.time() - ts, 4))
-    return img
+    return self.minimap_image
 
   @staticmethod
-  def get_black_minimap(img) -> numpy.ndarray:
+  def get_black_minimap(map_np_array) -> numpy.ndarray:
     # Load image and convert to greyscale
-    img = np.asarray(img)
-    img = MapProvider.remove_creatures_from_map(img)
-    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # debug_utils.draw_image(img_gray)
-
-    # Pixels higher than this will be 1. Otherwise 0.
+    map_np_array = MapProvider.remove_creatures_from_map(map_np_array)
+    img_gray = cv.cvtColor(map_np_array, cv.COLOR_BGR2GRAY)
     black_picture = (img_gray > Constants.BLACK_THRESHOLD_VALUE)
-    # debug_utils.draw_image(black_picture)
-
-    # Remove character from the map
-    # black_picture[PLAYER_ROW - PLAYER_HEIGHT:PLAYER_ROW + PLAYER_HEIGHT,
-    # PLAYER_COL - PLAYER_WIDTH:PLAYER_COL + PLAYER_WIDTH].fill(0)
-
     return black_picture
 
-  # Add 1 pixel below every black
   @staticmethod
   def get_black_minimap_bold(original_map) -> numpy.ndarray:
     max_row, max_col = original_map.shape
@@ -77,8 +73,7 @@ class MapProvider(object):
     return bold_map
 
   def locate_enemies(self) -> (list, list):
-    img_rgb = self.get_minimap()
-    img_rgb = np.array(img_rgb)
+    img_rgb = self.minimap_np_array
     img_rgb = self.map_to_red(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res = cv.matchTemplate(img_gray, self.enemy_template, cv.TM_CCOEFF_NORMED)
@@ -87,13 +82,12 @@ class MapProvider(object):
     return loc
 
   def is_in_town(self) -> bool:
-    ts = time.time()
-    img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row - 51, MINIMAP_X_SIZE, 51))
+    img_rgb = self.is_in_town_image
     # print('taking screenshot is_in_town, time_sec=', round(time.time() - ts, 4))
     img_rgb = np.array(img_rgb)
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    res_first_town = cv2.matchTemplate(img_gray, self.first_town_template, cv2.TM_CCOEFF_NORMED)
-    res_last_town = cv2.matchTemplate(img_gray, self.last_town_template, cv2.TM_CCOEFF_NORMED)
+    img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
+    res_first_town = cv.matchTemplate(img_gray, self.first_town_template, cv.TM_CCOEFF_NORMED)
+    res_last_town = cv.matchTemplate(img_gray, self.last_town_template, cv.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc_first_town = np.where(res_first_town >= threshold)
     loc_last_town = np.where(res_last_town >= threshold)
@@ -102,7 +96,6 @@ class MapProvider(object):
     return False
 
   def locate_player(self, img_rgb) -> (list, list):
-    img_rgb = np.array(img_rgb)
     img_rgb = self.filter_player(img_rgb)
     img_gray = cv.cvtColor(img_rgb, cv.COLOR_BGR2GRAY)
     res = cv.matchTemplate(img_gray, self.player_template, cv.TM_CCOEFF_NORMED)
@@ -117,7 +110,7 @@ class MapProvider(object):
   @staticmethod
   def map_to_red(map: np.array):
 
-    hsv = cv2.cvtColor(map, cv2.COLOR_BGR2HSV)
+    hsv = cv.cvtColor(map, cv.COLOR_BGR2HSV)
 
     lower_red = np.array([0, 220, 100])
     upper_red = np.array([255, 230, 255])
@@ -125,14 +118,14 @@ class MapProvider(object):
     # lower_red = np.array([0,50,180])
     # upper_red = np.array([255,255,255])
 
-    mask = cv2.inRange(hsv, lower_red, upper_red)
-    res = cv2.bitwise_and(map, map, mask=mask)
+    mask = cv.inRange(hsv, lower_red, upper_red)
+    res = cv.bitwise_and(map, map, mask=mask)
 
-    # cv2.imshow('hsv',hsv)
-    # cv2.imshow('img_rgb',map)
-    # cv2.imshow('mask',mask)
-    # cv2.imshow('res',res)
-    # cv2.waitKey(0)
+    # cv.imshow('hsv',hsv)
+    # cv.imshow('img_rgb',map)
+    # cv.imshow('mask',mask)
+    # cv.imshow('res',res)
+    # cv.waitKey(0)
     return res
 
   @staticmethod
@@ -152,22 +145,44 @@ class MapProvider(object):
     return res
 
   def is_in_map_selector(self) -> bool:
-    ts = time.time()
-    img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
+    # img_rgb = pyautogui.screenshot(region=(self.minimap_col, self.minimap_row, MINIMAP_X_SIZE, MINIMAP_Y_SIZE))
     # print4('taking screenshot is_in_map_selector, time_sec=', round(time.time() - ts, 4))
-    img_rgb = np.array(img_rgb)
-    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    res = cv2.matchTemplate(img_gray, self.map_selector_template, cv2.TM_CCOEFF_NORMED)
+    img_gray = cv.cvtColor(self.minimap_np_array, cv.COLOR_BGR2GRAY)
+    res = cv.matchTemplate(img_gray, self.map_selector_template, cv.TM_CCOEFF_NORMED)
     threshold = 0.8
     loc = np.where(res >= threshold)
     if len(loc[0]) == 0:
       return False
     return True
 
+  def update_maps(self):
+    # make a screenshot of game window
+    game_window_image = ImageGrab.grab((self.window_location_col, self.window_location_row,
+                                        self.window_location_col + WINDOW_COLUMNS_SIZE,
+                                        self.window_location_row + WINDOW_ROWS_SIZE))
+    self.minimap_image = self.crop_minimap_image(game_window_image).crop().convert('RGB')
+    self.is_in_town_image = self.crop_is_in_town_image(game_window_image).crop().convert('RGB')
+    self.minimap_np_array = np.array(self.minimap_image)
+
+    # .save("out/capture.png", "PNG")
+    return True
+
+  @staticmethod
+  def crop_minimap_image(game_window_image) -> PIL.Image.Image:
+    minimap = game_window_image.crop((MINIMAP_COLS_LOCATION, MINIMAP_ROWS_LOCATION,
+                                      MINIMAP_COLS_LOCATION + MINIMAP_X_SIZE, MINIMAP_ROWS_LOCATION + MINIMAP_Y_SIZE))
+    return minimap
+
+  @staticmethod
+  def crop_is_in_town_image(game_window_image) -> PIL.Image.Image:
+    is_in_town_image = game_window_image.crop(
+      (MINIMAP_COLS_LOCATION, MINIMAP_ROWS_LOCATION - 51, MINIMAP_COLS_LOCATION + MINIMAP_X_SIZE, 51))
+    return is_in_town_image
+
   @staticmethod
   def remove_creatures_from_map(map: np.array):
     map = MapProvider.remove_player_from_map(map)
-    hsv = cv2.cvtColor(map, cv2.COLOR_BGR2HSV)
+    hsv = cv.cvtColor(map, cv.COLOR_BGR2HSV)
 
     lower_red = np.array([0, 0, 0])
     upper_red = np.array([80, 220, 220])
@@ -175,8 +190,8 @@ class MapProvider(object):
     # lower_red = np.array([0,0,0])
     # upper_red = np.array([80,220,220])
 
-    mask = cv2.inRange(hsv, lower_red, upper_red)
-    res = cv2.bitwise_and(map, map, mask=mask)
+    mask = cv.inRange(hsv, lower_red, upper_red)
+    res = cv.bitwise_and(map, map, mask=mask)
     return res
 
   @staticmethod
